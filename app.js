@@ -1,12 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 
-var indexRouter = require('./routes/index');
+const redisClient = require('./src/db/redis');
 
-var app = express();
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+
+const app = express();
 
 
 app.use(logger('dev'));
@@ -14,7 +19,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(session({
+  secret: 'shadow#0514',
+  store: new RedisStore,
+  resave: false, // don't save session if unmodified
+  saveUninitialized: false, // don't create session until something stored
+  cookie: {
+    path: '/', //默认
+    httpOnly: true, //默认
+    maxAge: 24 * 60 * 60 * 100,
+  }
+}));
+app.use(function (req, res, next) {
+  console.info(req.session)
+  console.info(req.sessionID)
+  console.info(req.sessionStore)
+  next()
+})
+
 app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -29,7 +53,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send('error');
 });
 
 module.exports = app;

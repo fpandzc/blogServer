@@ -3,13 +3,13 @@ const env = process.env.NODE_ENV
 let MYSQL_CONF = {};
 let REDIS_CONF = {};
 
-if (env === 'dev') {
+if (env === 'development') {
     MYSQL_CONF = {
         host: 'localhost',
         user: 'root',
         password: 'shadow',
         port: '3306',
-        database: 'blog'
+        database: 'blogServer'
     }
 
     REDIS_CONF = {
