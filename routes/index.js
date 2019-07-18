@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const { loginCheck } = require('../src/middleware/middleware')
+const { SuccessModel, ErrorModel } = require('../src/model/resModel');
 
 /* GET home page. */
-router.get('/api/list', function(req, res, next) {
-  if(!req.session.username){
-    return res.send('未登录');
-  }
-  res.send('首页');
+router.get('/index', loginCheck, function(req, res, next) {
+  return res.json(
+    new SuccessModel('主页')
+  );
 });
 
 module.exports = router;

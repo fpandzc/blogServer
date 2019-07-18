@@ -1,8 +1,13 @@
- const { ErrorModel } = require('../model/resModel')
+const { ErrorModel } = require('../model/resModel')
 const loginCheck  = (req,res,next) => {
-  if(res.session.username){
-    next()
+  if(req.session.username){
+    return next()
   }
-
-  return new ErrorModel('未登录')
+  return res.json(
+    new ErrorModel('未登录')
+  )
 }
+
+module.exports = {
+  loginCheck
+};

@@ -30,15 +30,9 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 100,
   }
 }));
-app.use(function (req, res, next) {
-  console.info(req.session)
-  console.info(req.sessionID)
-  console.info(req.sessionStore)
-  next()
-})
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/blog', indexRouter);
+app.use('/api/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

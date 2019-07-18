@@ -10,24 +10,25 @@ const handleLogin = (username,  pwd) => {
 }
 
 const handleRegister = (username,  pwd) => {
-  let sql = `select username from users where username= ${escape(username)}`
-  return exec(sql).then(rows => {
-    if(rows[0]){
-      return {
-        msg: `用户名已存在`
-      }
-    }
 
-    sql = `insert into users (username, pwd) values (${escape(username)}, ${escape(pwd)})`
-    return exec(sql).then(result => {
-      return {
-        id: result.insertId
-      }
-    })
+  const sql = `insert into users (username, pwd) values (${escape(username)}, ${escape(pwd)})`
+  return exec(sql).then(result => {
+    return {
+      id: result.insertId
+    }
+  })
+}
+
+const isExistUsername = (username) => {
+  const sql = `select username from users where username= ${escape(username)}`
+
+  return exec(sql).then(rows => {
+    return rows[0]
   })
 }
 
 module.exports = {
   handleLogin,
-  handleRegister
+  handleRegister,
+  isExistUsername
 }

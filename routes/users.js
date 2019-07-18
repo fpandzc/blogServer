@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { handleLogin, handleRegister } = require('../src/controller/users');
+const { handleLogin, handleRegister, isExistUsername } = require('../src/controller/users');
 const { SuccessModel, ErrorModel } = require('../src/model/resModel');
 const { encrypt } = require('../src/utils/encryption');
 
@@ -29,6 +29,22 @@ router.post('/register', function(req, res, next) {
     if(!data.id && data.msg){
       return res.json(
         new ErrorModel(data.msg)
+      );
+    }
+    return res.json(
+      new SuccessModel('注册成功')
+    );
+  })
+});
+
+router.post('/username', function(req, res, next) {
+  let username = req.body.username;
+  const result = isExistUsername(username);
+
+  return result.then(data => {
+    if(data){
+      return res.json(
+        new ErrorModel('用户名已存在')
       );
     }
     return res.json(
