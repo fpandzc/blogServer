@@ -26,9 +26,9 @@ router.post('/register', function(req, res, next) {
   const result = handleRegister(username, pwd);
 
   return result.then(data => {
-    if(!data.id && data.msg){
+    if(!data.id){
       return res.json(
-        new ErrorModel(data.msg)
+        new ErrorModel('注册失败')
       );
     }
     return res.json(

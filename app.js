@@ -31,6 +31,8 @@ app.use(session({
   }
 }));
 
+app.use(express.static('../blogData')); //托管用户博客数据文件夹
+
 app.use('/api/blog', indexRouter);
 app.use('/api/users', usersRouter);
 
